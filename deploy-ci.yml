@@ -1,0 +1,15 @@
+# 当前部署节点
+stage: deploy
+
+# 至少有且只能有一个与stages对应，部署节点
+deploy:
+  only:
+    - master # 允许多个分支部署
+  webpath: /www/wwwroot/project # 部署目录，必须是绝对路径
+  script: # 对应部署脚本
+    - cd ${webpath}
+    - rm -rf runtime/*
+    - rm -f composer.lock
+    - composer install -vvv
+    - chown -R www.www *
+    - chmod -R 755 public/uploads
