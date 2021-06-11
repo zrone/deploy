@@ -74,9 +74,9 @@ SHELL;
         $filesystem->dumpFile($pullFile, $pullText);
         $filesystem->chmod($pullFile, 0777);
         // 更新文件
-        $code = system("sh {$pullFile}");
+        system("sh {$pullFile}", $code);
 
-        if ($code != false) {
+        if ($code == 0) {
             $this->finder->in($this->webPath)->name('deploy-ci.yml')->depth(0)->files();
 
             foreach ($this->finder as $file) {
@@ -122,13 +122,13 @@ SHELL;
 
             echo '开始部署...' . PHP_EOL;
 
-            $code = system("sh {$shellFile}");
+            system("sh {$shellFile}", $code);
 
-            if ($code != false) {
+            if ($code == 0) {
                 echo '部署成功' . PHP_EOL;
                 $logger(LoggerTypeEnum::HOOK)->alert('部署成功');
             } else {
-                echo '部署脚本执行异常，请检查!!!' . $code . PHP_EOL;
+                echo '部署脚本执行异常，请检查!!!' . PHP_EOL;
                 $logger(LoggerTypeEnum::HOOK)->alert('部署脚本执行异常，请检查。');
             }
             return $code == 0;
