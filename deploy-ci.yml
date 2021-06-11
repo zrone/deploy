@@ -5,7 +5,7 @@ stage: deploy
 deploy:
   only:
     - master # 允许多个分支部署
-  webpath: /www/wwwroot/project # 部署目录，必须是绝对路径
+  webpath: /www/wwwroot/yoshop2.0 # 部署目录，必须是绝对路径
   script: # 对应部署脚本
     - cd ${webpath}
     - rm -rf runtime/*

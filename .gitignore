@@ -1,0 +1,8 @@
+vendor/
+tools/
+.idea/
+.git/
+composer.lock
+.php-cs-fixer.cache
+runtime/log/*.log
+runtime/shell/*.sh
