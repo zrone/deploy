@@ -106,12 +106,13 @@ ERROR
                 break;
         }
 
-//        $as = CommandStdin::input("雷蛇");
-//        var_dump($as);
-
         return Command::SUCCESS;
     }
 
+    /**
+     * 创建配置
+     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     */
     private function createOperation(SymfonyStyle $io): void
     {
         $projectName = $io->ask("配置名称:", null, function ($projectName) use ($io) {
