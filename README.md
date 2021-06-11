@@ -26,10 +26,10 @@
 5.  <font style="color:#F56C6C">重要：保证项目下所有文件和目录包括隐藏文件`.git`目录的所有者为`www`</font>
 6.  项目部署脚本需要放到根目录下（即WEB_PATH），文件格式为 yaml，文件名必须为 `deploy-ci.yml`，具体可参考项目内文件。
 7.  增加命令行管理工具：
-    `php bin/grace project list [all]` 查看配置
-    `php bin/grace project create` 创建配置
-    `php bin/grace project modify project_name` 删除配置
-    `php bin/grace project remove project_name` 修改配置
+    - `php bin/grace project list [all]` 查看配置
+    - `php bin/grace project create` 创建配置
+    - `php bin/grace project modify project_name` 删除配置
+    - `php bin/grace project remove project_name` 修改配置
     
 ![img_3.png](img_3.png)
 #### 使用说明
