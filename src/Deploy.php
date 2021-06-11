@@ -128,7 +128,7 @@ SHELL;
                 echo '部署成功' . PHP_EOL;
                 $logger(LoggerTypeEnum::HOOK)->alert('部署成功');
             } else {
-                echo '部署脚本执行异常，请检查!!!' . PHP_EOL;
+                echo '部署脚本执行异常，请检查!!!' . $code . PHP_EOL;
                 $logger(LoggerTypeEnum::HOOK)->alert('部署脚本执行异常，请检查。');
             }
             return $code == 0;
