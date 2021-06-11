@@ -6,4 +6,3 @@ composer.lock
 .php-cs-fixer.cache
 runtime/log/*.log
 runtime/shell/*.sh
-config/Config.php
