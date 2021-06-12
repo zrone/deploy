@@ -14,17 +14,17 @@ use ConstantUtil\Utils\Arr;
 use Entity\CryptDataConfig;
 
 /**
- * gitee 签名验证
+ * github 签名验证
  *
- * Class GiteeCrypt
+ * Class GithubCrypt
  */
-class GiteeCrypt extends AbstractCrypt
+class GithubCrypt extends AbstractCrypt
 {
     public $secret;
 
     public $token;
 
-    public $timestamp;
+    public $payload;
 
     public $sign;
 
@@ -33,8 +33,8 @@ class GiteeCrypt extends AbstractCrypt
         parent::__construct($headerPreValidatorData);
 
         $this->secret = Arr::get($headerPreValidatorData->config, 'SECRET');
-        $this->token = $headerPreValidatorData->headers->get('x-gitee-token');
-        $this->timestamp = $headerPreValidatorData->headers->get('x-gitee-timestamp');
+        $this->token = $headerPreValidatorData->headers->get('x-hub-signature-256');
+        $this->payload = $headerPreValidatorData->payload;
     }
 
     /**
@@ -42,14 +42,7 @@ class GiteeCrypt extends AbstractCrypt
      */
     public function buildPrefixCryptSign(): self
     {
-        // $timestamp = bcmul((string) microtime(true), (string) 1000);
-        $timestamp = $this->timestamp;
-        $prefixCryptString = <<<STR
-{$timestamp}
-{$this->secret}
-STR;
-
-        $this->sign = base64_encode(hash_hmac('sha256', $prefixCryptString, $this->secret, true));
+        $this->sign = "sha256=" . hash_hmac('sha256', $this->payload, $this->secret);
         return $this;
     }
 }

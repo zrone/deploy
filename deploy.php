@@ -1,15 +1,15 @@
 <?php
 
 declare(strict_types=1);
-
 /**
- * Gitee 自动化部署 by zrone<xujining2008@126.com>.
+ * Application By zrone.
  *
- * @contact zrone
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
  */
-
+use App\AbstractCrypt;
 use App\Deploy;
-use App\GiteeCrypt;
 use App\Logger;
 use App\LoggerTypeEnum;
 use Config\Config;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-define("SHELL_PATH", __DIR__ . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'shell' . DIRECTORY_SEPARATOR);
+define('SHELL_PATH', __DIR__ . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'shell' . DIRECTORY_SEPARATOR);
 
 require './vendor/autoload.php';
 \Composer\Autoload\includeFile('./config/Config.php');
@@ -34,20 +34,25 @@ try {
     $request = new Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER, $content);
     $request->headers = new HeaderBag(getallheaders());
 
+    $requestData = json_decode($request->getContent(), true);
+    // 独立package
     $package = $request->query->get('package', null);
+
     if (Arr::exists(Config::PROJECT, $package)) {
-        $result = GiteeCrypt::build(new CryptDataConfig([
-            'config'    => Arr::get(Config::PROJECT, $package),
-            'timestamp' => $request->headers->get('x-gitee-timestamp'),
-            'token'     => $request->headers->get('x-gitee-token'),
+        $result = AbstractCrypt::build(new CryptDataConfig([
+            'htmlUrl' => Arr::get($requestData, 'repository')['html_url'],
+            'config' => Arr::get(Config::PROJECT, $package),
+            'headers' => $request->headers,
+            'payload' => $request->getContent(),
         ]))
             ->buildPrefixCryptSign()
             ->compare();
 
-        $requestData = json_decode($request->getContent(), true);
+        // 兼容 github 单分支找不到refs
+        $requestData['ref'] = Arr::exists($requestData, 'ref') ? Arr::get($requestData, 'ref') : 'refs/heads/master';
 
-        $result &&
-        $deployCode = Deploy::build($requestData['ref'], $package, Arr::get(Config::PROJECT, $package))
+        $result
+        && $deployCode = Deploy::build($requestData['ref'], $package, Arr::get(Config::PROJECT, $package))
             ->process()
             ->run();
     }

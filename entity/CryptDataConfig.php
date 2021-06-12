@@ -8,58 +8,59 @@ declare(strict_types=1);
  * @document https://gitee.com/marksirl
  * @contact  zrone<xujining415@gmail.com>
  */
+
 namespace Entity;
+
+use App\RepositoryEnum;
+use Symfony\Component\HttpFoundation\HeaderBag;
 
 class CryptDataConfig
 {
     /** @var int */
-    public $timestamp;
+    public $symbol;
 
     /** @var string */
-    public $token;
+    public $htmlUrl;
+
+    /** @var HeaderBag */
+    public $headers;
 
     /** @var array */
     public $config;
+
+    /** @var string */
+    public $payload;
 
     public function __construct(array $data = [])
     {
         foreach ($data as $key => $val) {
             if (property_exists(__CLASS__, $key)) {
-                $this->{$key} = $val;
+                $method = 'set' . ucfirst($key);
+
+                method_exists($this, $method) &&
+                is_callable(array(
+                    $this,
+                    $method,
+                )) &&
+                $this->$method($val);
             }
         }
     }
 
     /**
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\HeaderBag
      */
-    public function getTimestamp()
+    public function getHeaders(): HeaderBag
     {
-        return $this->timestamp;
+        return $this->headers;
     }
 
     /**
-     * @param mixed $timestamp
+     * @param \Symfony\Component\HttpFoundation\HeaderBag $headers
      */
-    public function setTimestamp($timestamp): void
+    public function setHeaders(HeaderBag $headers): void
     {
-        $this->timestamp = $timestamp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
-     * @param mixed $token
-     */
-    public function setToken($token): void
-    {
-        $this->token = $token;
+        $this->headers = $headers;
     }
 
     /**
@@ -76,5 +77,58 @@ class CryptDataConfig
     public function setConfig($config): void
     {
         $this->config = $config;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSymbol(): int
+    {
+        return $this->symbol;
+    }
+
+    /**
+     * @param int $symbol
+     */
+    public function setSymbol(int $symbol): void
+    {
+        $this->symbol = $symbol;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHtmlUrl(): string
+    {
+        return $this->htmlUrl;
+    }
+
+    /**
+     * @param string $htmlUrl
+     */
+    public function setHtmlUrl(string $htmlUrl): void
+    {
+        if (preg_match("/^https:\/\/github.com(.*)/", $htmlUrl)) {
+            $this->symbol = RepositoryEnum::GITHUB;
+        } else {
+            $this->symbol = RepositoryEnum::GITEE;
+        }
+        $this->htmlUrl = $htmlUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPayload(): string
+    {
+        return $this->payload;
+    }
+
+    /**
+     * @param string $payload
+     */
+    public function setPayload(string $payload): void
+    {
+        $this->payload = $payload;
     }
 }
