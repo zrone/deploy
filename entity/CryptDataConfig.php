@@ -108,10 +108,14 @@ class CryptDataConfig
      */
     public function setHtmlUrl(string $htmlUrl): void
     {
-        if (preg_match("/^https:\/\/github.com(.*)/", $htmlUrl)) {
-            $this->symbol = RepositoryEnum::GITHUB;
+        if (empty($htmlUrl)) {
+            $this->symbol = RepositoryEnum::GITLAB;
         } else {
-            $this->symbol = RepositoryEnum::GITEE;
+            if (preg_match("/^https:\/\/github.com(.*)/", $htmlUrl)) {
+                $this->symbol = RepositoryEnum::GITHUB;
+            } else {
+                $this->symbol = RepositoryEnum::GITEE;
+            }
         }
         $this->htmlUrl = $htmlUrl;
     }

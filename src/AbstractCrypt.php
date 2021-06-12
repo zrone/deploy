@@ -20,10 +20,16 @@ abstract class AbstractCrypt implements CryptInterface
 
     public static function build(CryptDataConfig $headerPreValidatorData): CryptInterface
     {
-        if ($headerPreValidatorData->symbol === RepositoryEnum::GITHUB) {
-            $instance = new GithubCrypt($headerPreValidatorData);
-        } else {
-            $instance = new GiteeCrypt($headerPreValidatorData);
+        switch ($headerPreValidatorData->symbol) {
+            case RepositoryEnum::GITEE:
+                $instance = new GiteeCrypt($headerPreValidatorData);
+                break;
+            case RepositoryEnum::GITLAB:
+                $instance = new GitlabCrypt($headerPreValidatorData);
+                break;
+            default:
+                $instance = new GithubCrypt($headerPreValidatorData);
+                break;
         }
 
         return $instance;

@@ -40,7 +40,7 @@ try {
 
     if (Arr::exists(Config::PROJECT, $package)) {
         $result = AbstractCrypt::build(new CryptDataConfig([
-            'htmlUrl' => Arr::get($requestData, 'repository')['html_url'],
+            'htmlUrl' => isset(Arr::get($requestData, 'repository')['html_url']) ? Arr::get($requestData, 'repository')['html_url'] : null,
             'config' => Arr::get(Config::PROJECT, $package),
             'headers' => $request->headers,
             'payload' => $request->getContent(),

@@ -15,4 +15,6 @@ class RepositoryEnum
     public const GITEE = 10;
 
     public const GITHUB = 20;
+
+    public const GITLAB = 30;
 }
