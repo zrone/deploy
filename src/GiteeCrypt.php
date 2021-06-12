@@ -40,7 +40,7 @@ class GiteeCrypt extends AbstractCrypt
     /**
      * 签名.
      */
-    public function buildPrefixCryptSign(): self
+    public function buildPrefixCryptSign(): CryptInterface
     {
         $prefixCryptString = <<<STR
 {$this->timestamp}

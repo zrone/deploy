@@ -40,7 +40,7 @@ class GithubCrypt extends AbstractCrypt
     /**
      * 签名.
      */
-    public function buildPrefixCryptSign(): self
+    public function buildPrefixCryptSign(): CryptInterface
     {
         $this->sign = "sha256=" . hash_hmac('sha256', $this->payload, $this->secret);
         return $this;
