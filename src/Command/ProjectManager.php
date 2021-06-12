@@ -48,7 +48,8 @@ class ProjectManager extends Command
 
         $this
             ->setDescription('部署项目管理.')
-            ->setHelp(<<<HELP
+            ->setHelp(
+                <<<HELP
 添加、删除、修改部署项目配置
 HELP
             );
@@ -82,6 +83,9 @@ DESC
 
         switch (Arr::get($args, 0)) {
             case 'list':
+                if (empty($param)) {
+                    $param = "all";
+                }
                 $this->listOperation($param, $io);
                 break;
 
@@ -90,7 +94,8 @@ DESC
                 break;
 
             case 'remove':
-                empty($param) && $io->error(<<<ERROR
+                empty($param) && $io->error(
+                    <<<ERROR
 请指定移除配置名称 `bin/grace remove projectName`
 ERROR
                 );
@@ -98,7 +103,8 @@ ERROR
                 break;
 
             case 'modify':
-                empty($param) && $io->error(<<<ERROR
+                empty($param) && $io->error(
+                    <<<ERROR
 请指定待修改配置名称 `bin/grace modify projectName`
 ERROR
                 );
@@ -200,7 +206,7 @@ FILE;
                 ],
                 $response
             );
-        } else if (Arr::exists($this->config, $symbol)) {
+        } elseif (Arr::exists($this->config, $symbol)) {
             $io->section("{$symbol} 项目配置");
             $item = Arr::get($this->config, $symbol);
             $io->horizontalTable(
