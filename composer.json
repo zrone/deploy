@@ -9,6 +9,7 @@
     ],
     "minimum-stability": "alpha",
     "require": {
+        "php": ">=7.3",
         "ext-bcmath": "*",
         "guzzlehttp/guzzle": "^7.3",
         "hashids/hashids": "^4.1",
