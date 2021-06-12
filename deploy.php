@@ -38,7 +38,7 @@ try {
     // 独立package
     $package = $request->query->get('package', null);
 
-    if (Arr::exists(Config::PROJECT, $package)) {
+    if ($requestData && Arr::exists(Config::PROJECT, $package)) {
         $result = AbstractCrypt::build(new CryptDataConfig([
             'htmlUrl' => isset(Arr::get($requestData, 'repository')['html_url']) ? Arr::get($requestData, 'repository')['html_url'] : null,
             'config' => Arr::get(Config::PROJECT, $package),
