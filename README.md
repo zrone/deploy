@@ -4,7 +4,7 @@
 自动化部署
 
 #### 软件架构
-自动化部署利用webhook实现项目自动化部署发布，支持 Gitee、Github
+自动化部署利用webhook实现项目自动化部署发布，支持 Gitee、Github、Gitlab
 
 
 #### 安装教程
@@ -42,9 +42,10 @@
 
 #### 功能支持
 
-1.  Support Github
-2.  Console manager
-3.  Support Gitee
+1.  Support Gitlab
+2.  Support Github
+3.  Console manager
+4.  Support Gitee
 
 #### 参与贡献
 

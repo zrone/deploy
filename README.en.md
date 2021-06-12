@@ -4,7 +4,7 @@
 Automated Deployment
 
 #### Software Architecture
-Automated deployment using webhook to automate project deployment and release with support for Gitee and Github.
+Automated deployment using webhook to automate project deployment and release with support for Gitee/Github/Gitlab.
 
 #### Installation
 
@@ -42,9 +42,10 @@ Automated deployment using webhook to automate project deployment and release wi
 
 #### Feature
 
-1.  Support Github
-2.  Console manager
-3.  Support Gitee
+1.  Support Gitlab
+2.  Support Github
+3.  Console manager
+4.  Support Gitee
 
 #### Contribution
 
