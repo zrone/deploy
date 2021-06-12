@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 /**
- * Gitee 自动化部署 by zrone<xujining2008@126.com>.
+ * Application By zrone.
  *
- * @contact zrone
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
  */
 namespace App;
 

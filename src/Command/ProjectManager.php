@@ -1,13 +1,13 @@
 <?php
 
 declare(strict_types=1);
-
 /**
- * Gitee 自动化部署 by zrone<xujining2008@126.com>.
+ * Application By zrone.
  *
- * @contact zrone
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
  */
-
 namespace App\Command;
 
 use Config\Config;
@@ -24,13 +24,13 @@ class ProjectManager extends Command
     // the name of the command (the part after "bin/console")
     protected static $defaultName = 'project';
 
-    /** @var array $config */
+    /** @var array */
     protected $config;
 
-    /** @var InputInterface $input */
+    /** @var InputInterface */
     protected $input;
 
-    /** @var OutputInterface $output */
+    /** @var OutputInterface */
     protected $output;
 
     /**
@@ -49,7 +49,7 @@ class ProjectManager extends Command
         $this
             ->setDescription('部署项目管理.')
             ->setHelp(
-                <<<HELP
+                <<<'HELP'
 添加、删除、修改部署项目配置
 HELP
             );
@@ -57,7 +57,7 @@ HELP
         $this->addArgument(
             'args',
             InputArgument::IS_ARRAY | InputArgument::OPTIONAL,
-            <<<DESC
+            <<<'DESC'
 list [name] 查看配置
 create      创建配置
 remove name 删除配置
@@ -84,27 +84,24 @@ DESC
         switch (Arr::get($args, 0)) {
             case 'list':
                 if (empty($param)) {
-                    $param = "all";
+                    $param = 'all';
                 }
                 $this->listOperation($param, $io);
                 break;
-
             case 'create':
                 $this->createOperation($io);
                 break;
-
             case 'remove':
                 empty($param) && $io->error(
-                    <<<ERROR
+                    <<<'ERROR'
 请指定移除配置名称 `bin/grace remove projectName`
 ERROR
                 );
                 $this->removeOperation($param, $io);
                 break;
-
             case 'modify':
                 empty($param) && $io->error(
-                    <<<ERROR
+                    <<<'ERROR'
 请指定待修改配置名称 `bin/grace modify projectName`
 ERROR
                 );
@@ -116,28 +113,27 @@ ERROR
     }
 
     /**
-     * 创建配置
-     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     * 创建配置.
      */
     private function createOperation(SymfonyStyle $io): void
     {
-        $projectName = $io->ask("配置名称:", null, function ($projectName) use ($io) {
+        $projectName = $io->ask('配置名称:', null, function ($projectName) use ($io) {
             if (empty($projectName)) {
-                $io->error("配置名称不能为空");
+                $io->error('配置名称不能为空');
                 exit();
             }
             return trim($projectName);
         });
-        $projectSecret = $io->ask("SECRET:", null, function ($projectSecret) use ($io) {
+        $projectSecret = $io->ask('SECRET:', null, function ($projectSecret) use ($io) {
             if (empty($projectSecret)) {
-                $io->error("SECRET不能为空");
+                $io->error('SECRET不能为空');
                 exit();
             }
             return trim($projectSecret);
         });
-        $projectWebPath = $io->ask("WEB_PATH:", null, function ($projectWebPath) use ($io) {
+        $projectWebPath = $io->ask('WEB_PATH:', null, function ($projectWebPath) use ($io) {
             if (empty($projectWebPath)) {
-                $io->error("WEB_PATH不能为空");
+                $io->error('WEB_PATH不能为空');
                 exit();
             }
             return trim($projectWebPath);
@@ -148,7 +144,7 @@ ERROR
         } else {
             $this->config = Arr::merge($this->config, [
                 $projectName => [
-                    'SECRET'   => $projectSecret,
+                    'SECRET' => $projectSecret,
                     'WEB_PATH' => $projectWebPath,
                 ],
             ]);
@@ -159,11 +155,12 @@ ERROR
 
 declare(strict_types=1);
 /**
- * Gitee 自动化部署 by zrone<xujining2008@126.com>.
+ * Application By zrone.
  *
- * @contact zrone
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
  */
-
 namespace Config;
 
 class Config
@@ -181,10 +178,7 @@ FILE;
     }
 
     /**
-     * list 操作
-     *
-     * @param string $symbol
-     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     * list 操作.
      */
     private function listOperation(string $symbol, SymfonyStyle $io): void
     {
@@ -229,10 +223,7 @@ FILE;
     }
 
     /**
-     * 删除操作
-     *
-     * @param string $symbol
-     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     * 删除操作.
      */
     private function removeOperation(string $symbol, SymfonyStyle $io): void
     {
@@ -245,11 +236,12 @@ FILE;
 
 declare(strict_types=1);
 /**
- * Gitee 自动化部署 by zrone<xujining2008@126.com>.
+ * Application By zrone.
  *
- * @contact zrone
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
  */
-
 namespace Config;
 
 class Config
@@ -269,15 +261,12 @@ FILE;
     }
 
     /**
-     * 修改操作
-     *
-     * @param string $symbol
-     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     * 修改操作.
      */
     private function modifyOperation(string $symbol, SymfonyStyle $io): void
     {
         if (Arr::exists($this->config, $symbol)) {
-            $io->section("当前项目配置");
+            $io->section('当前项目配置');
             $item = Arr::get($this->config, $symbol);
             $io->horizontalTable(
                 [
@@ -294,14 +283,13 @@ FILE;
                 ]
             );
 
-
-            $projectName = $io->ask("配置名称:", $symbol, function ($projectName) {
+            $projectName = $io->ask('配置名称:', $symbol, function ($projectName) {
                 return trim($projectName);
             });
-            $projectSecret = $io->ask("SECRET:", $item['SECRET'], function ($projectSecret) {
+            $projectSecret = $io->ask('SECRET:', $item['SECRET'], function ($projectSecret) {
                 return trim($projectSecret);
             });
-            $projectWebPath = $io->ask("WEB_PATH:", $item['WEB_PATH'], function ($projectWebPath) {
+            $projectWebPath = $io->ask('WEB_PATH:', $item['WEB_PATH'], function ($projectWebPath) {
                 return trim($projectWebPath);
             });
 
@@ -312,7 +300,7 @@ FILE;
                 Arr::forget($this->config, $symbol);
                 $this->config = Arr::merge($this->config, [
                     $projectName => [
-                        'SECRET'   => $projectSecret,
+                        'SECRET' => $projectSecret,
                         'WEB_PATH' => $projectWebPath,
                     ],
                 ]);
@@ -323,11 +311,12 @@ FILE;
 
 declare(strict_types=1);
 /**
- * Gitee 自动化部署 by zrone<xujining2008@126.com>.
+ * Application By zrone.
  *
- * @contact zrone
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
  */
-
 namespace Config;
 
 class Config

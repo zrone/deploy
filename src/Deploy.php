@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 /**
- * Gitee 自动化部署 by zrone<xujining2008@126.com>.
+ * Application By zrone.
  *
- * @contact zrone
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
  */
-
 namespace App;
 
-use Config\Config;
 use ConstantUtil\Utils\Arr;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -26,16 +26,16 @@ class Deploy
 
     public $webPath;
 
-    /** @var Finder $finder */
+    /** @var Finder */
     public $finder;
 
-    /** @var bool $isAllowDeploy */
+    /** @var bool */
     public $isAllowDeploy = false;
 
-    /** @var array $deployConfig */
+    /** @var array */
     public $deployConfig;
 
-    /** @var string $package */
+    /** @var string */
     public $package;
 
     /**
@@ -65,7 +65,7 @@ class Deploy
         $pullText = <<<SHELL
 #!/bin/bash
 
-webpath=$this->webPath;
+webpath={$this->webPath};
 cd \${webpath};
 # pull 脚本
 git pull origin {$this->branch} 2>&1;
@@ -85,15 +85,15 @@ SHELL;
             }
 
             $this->deployConfig = Arr::get($parseConfig, Arr::get($parseConfig, 'stage'));
-            if (in_array($this->branch, Arr::get($this->deployConfig, 'only')) &&
-                Arr::exists($this->deployConfig, 'script')) {
+            if (in_array($this->branch, Arr::get($this->deployConfig, 'only'))
+                && Arr::exists($this->deployConfig, 'script')) {
                 $this->isAllowDeploy = true;
             }
         }
         return $this;
     }
 
-    public function run() : bool
+    public function run(): bool
     {
         $logger = new Logger();
         if ($this->isAllowDeploy) {
@@ -107,7 +107,7 @@ SHELL;
 #!/bin/bash
 
 # 部署
-webpath=$this->webPath;
+webpath={$this->webPath};
 
 # 配置shell脚本
 
@@ -132,9 +132,8 @@ SHELL;
                 $logger(LoggerTypeEnum::HOOK)->alert('部署脚本执行异常，请检查。');
             }
             return $code == 0;
-        } else {
-            $logger(LoggerTypeEnum::INFO)->info('未验证的分支取消部署');
         }
+        $logger(LoggerTypeEnum::INFO)->info('未验证的分支取消部署');
 
         return false;
     }

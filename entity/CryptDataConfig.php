@@ -1,16 +1,24 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * Application By zrone.
+ *
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
+ */
 namespace Entity;
 
 class CryptDataConfig
 {
-    /** @var int $timestamp */
+    /** @var int */
     public $timestamp;
 
-    /** @var string $token */
+    /** @var string */
     public $token;
 
-    /** @var array $config */
+    /** @var array */
     public $config;
 
     public function __construct(array $data = [])
