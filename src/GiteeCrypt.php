@@ -42,10 +42,8 @@ class GiteeCrypt extends AbstractCrypt
      */
     public function buildPrefixCryptSign(): self
     {
-        // $timestamp = bcmul((string) microtime(true), (string) 1000);
-        $timestamp = $this->timestamp;
         $prefixCryptString = <<<STR
-{$timestamp}
+{$this->timestamp}
 {$this->secret}
 STR;
 
