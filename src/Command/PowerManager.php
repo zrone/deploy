@@ -91,7 +91,7 @@ DESC
 
         $response = system("ssh -T {$domain}");
         if (strpos($response, "successfully authenticated") >= 0) {
-            $io->success("rsa成功授权");
+            $io->success("rsa成功授权" . $response);
         } else {
             $io->warning("rsa授权失败，请检查rsa配置和权限配置是否正确");
         }
