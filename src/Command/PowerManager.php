@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
 
 /**
  * 目录权限管理
@@ -22,6 +23,8 @@ class PowerManager extends Command
 {
     // the name of the command (the part after "bin/grace")
     protected static $defaultName = 'power';
+
+    protected $symbol = true;
 
     protected function configure()
     {
@@ -70,7 +73,7 @@ DESC
 
         switch ($repository) {
             case 'gitlab':
-                if(!Arr::exists($args, 2)) {
+                if (!Arr::exists($args, 2)) {
                     $io->error("请填写gitlab域名");
                     exit();
                 } else {
@@ -96,20 +99,48 @@ DESC
         }
     }
 
-    private function checkOption(array $args, SymfonyStyle $io): void {
-        $path = Arr::get(Config::PROJECT, Arr::get($args, 1))['WEB_PATH'];
+    private function checkOption(array $args, SymfonyStyle $io): void
+    {
+        // $path = Arr::get(Config::PROJECT, Arr::get($args, 1))['WEB_PATH'];
+        $path = '/Users/zrone/Developments/php/deploy';
 
-        $rootCmd = <<<CMD
-ls -la {$path} | awk '{printf "%15s %6s %6s\n", $9, $3, $4}'
-CMD;
-        $gitCmd = <<<CMD
-ls -la {$path}/.git | awk '{printf "%15s %6s %6s\n", $9, $3, $4}'
-CMD;
+        $finder = new Finder();
+        $finder->in($path)
+            ->depth(0)
+            ->ignoreUnreadableDirs(false)
+            ->ignoreVCS(false)
+            ->ignoreVCSIgnored(false)
+            ->ignoreDotFiles(false);
 
-        $rootResponse = system($rootCmd);
-        $gitResponse = system($gitCmd);
+        foreach ($finder as $file) {
+            exec("ls -la {$file->getRealPath()}", $output);
+            if ($file->isFile()) {
+                $this->checkGrpAndOwn($output[0], $io, "");
+            } else {
+                foreach ($output as $item) {
+                    if ($item == '.' || $item == '..') continue;
+                    $this->checkGrpAndOwn($item, $io, $file->getRealPath() . '/');
+                }
+            }
+        }
+        if($this->symbol) $io->success('权限正常');
+    }
 
-        $io->success($rootResponse);
+    private function checkGrpAndOwn(string $info, SymfonyStyle $io, string $prefix = "")
+    {
+        $fileArr = explode(" ", $info);
+        $fileArr = array_merge(array_filter($fileArr, function ($row) {
+            return !empty(trim($row));
+        }), []);
+
+        if (count($fileArr) == 9) {
+            $fileName = Arr::last($fileArr);
+
+            if (($fileName != '.' && $fileName != '..') && ($fileArr[2] !== 'www' || $fileArr[3] !== 'www')) {
+                $this->symbol = false;
+                $io->writeln('<fg=#c0392b>权限验证失败' . $prefix . $fileName . ' ' . $fileArr[2] . ' ' . $fileArr[3] . '</>');
+            }
+        }
     }
 
     /**
