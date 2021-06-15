@@ -71,6 +71,7 @@ DESC
 
         switch ($repository) {
             case 'gitlab':
+                !Arr::exists($args, 2) && $io->error("请填写gitlab域名");
                 $domain = Arr::get($args, 2);
                 !$this->domainCallback($domain) && $io->error("未验证的gitlab域名");
                 break;
@@ -84,7 +85,12 @@ DESC
                 break;
         }
 
-        echo system("ssh -T {$domain}");
+        $response = system("ssh -T {$domain}");
+        if (strpos($response, "successfully authenticated") >= 0) {
+            $io->success("rsa成功授权");
+        } else {
+            $io->warning("rsa授权失败，请检查rsa配置和权限配置是否正确");
+        }
     }
 
     /**
