@@ -10,6 +10,7 @@ set_time_limit(0);
 require __DIR__ . '/../vendor/autoload.php';
 \Composer\Autoload\includeFile('./config/Config.php');
 
+use App\Command\PowerManager;
 use App\Command\ProjectManager;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -19,4 +20,5 @@ $application = new Application();
 
 // ... register commands
 $application->add(new ProjectManager());
+$application->add(new PowerManager());
 $application->run($input);

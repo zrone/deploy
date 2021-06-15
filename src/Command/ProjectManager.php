@@ -21,17 +21,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ProjectManager extends Command
 {
-    // the name of the command (the part after "bin/console")
+    // the name of the command (the part after "bin/grace")
     protected static $defaultName = 'project';
 
     /** @var array */
     protected $config;
-
-    /** @var InputInterface */
-    protected $input;
-
-    /** @var OutputInterface */
-    protected $output;
 
     /**
      * ProjectManager constructor.
@@ -73,9 +67,6 @@ DESC
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
-
         $args = Arr::get($input->getArguments(), 'args');
 
         $param = Arr::exists($args, 1) ? Arr::get($args, 1) : null;

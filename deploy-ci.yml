@@ -1,7 +1,7 @@
 # 当前部署节点
 stage: deploy
 
-# 至少有且只能有一个与stages对应，部署节点
+# 至少有且只能有一个与stage对应，部署节点
 deploy:
   only:
     - master # 允许多个分支部署
