@@ -1,8 +1,14 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * Application By zrone.
+ *
+ * @link     https://gitee.com/marksirl
+ * @document https://gitee.com/marksirl
+ * @contact  zrone<xujining415@gmail.com>
+ */
 namespace App\Command;
-
 
 use Config\Config;
 use ConstantUtil\Utils\Arr;
@@ -14,10 +20,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
 
 /**
- * 目录权限管理
+ * 目录权限管理.
  *
  * Class PowerManager
- * @package App\Command
  */
 class PowerManager extends Command
 {
@@ -53,7 +58,7 @@ DESC
     {
         $args = Arr::get($input->getArguments(), 'args');
         $io = new SymfonyStyle($input, $output);
-        $this->checkDisabledFunc('system') && $io->error("system方法被禁用，请打开后尝试");
+        $this->checkDisabledFunc('system') && $io->error('system方法被禁用，请打开后尝试');
 
         switch (Arr::get($args, 0)) {
             case 'id_rsa':
@@ -73,35 +78,33 @@ DESC
 
         switch ($repository) {
             case 'gitlab':
-                if (!Arr::exists($args, 2)) {
-                    $io->error("请填写gitlab域名");
+                if (! Arr::exists($args, 2)) {
+                    $io->error('请填写gitlab域名');
                     exit();
-                } else {
-                    $domain = Arr::get($args, 2);
-                    !$this->domainCallback($domain) && $io->error("未验证的gitlab域名");
                 }
-                break;
+                    $domain = Arr::get($args, 2);
+                    ! $this->domainCallback($domain) && $io->error('未验证的gitlab域名');
 
+                break;
             case 'gitee':
                 $domain = 'git@gitee.com';
                 break;
-
             default:
                 $domain = 'git@github.com';
                 break;
         }
 
         $response = system("ssh -T {$domain}");
-        if (is_numeric($response) && strpos($response, "successfully authenticated") >= 0) {
-            $io->success("rsa成功授权");
+        if (is_numeric($response) && strpos($response, 'successfully authenticated') >= 0) {
+            $io->success('rsa成功授权');
         } else {
-            $io->warning("rsa授权失败，请检查rsa配置和权限配置是否正确");
+            $io->warning('rsa授权失败，请检查rsa配置和权限配置是否正确');
         }
     }
 
     private function checkOption(array $args, SymfonyStyle $io): void
     {
-         $path = Arr::get(Config::PROJECT, Arr::get($args, 1))['WEB_PATH'];
+        $path = Arr::get(Config::PROJECT, Arr::get($args, 1))['WEB_PATH'];
 
         $finder = new Finder();
         $finder->in($path)
@@ -114,22 +117,26 @@ DESC
         foreach ($finder as $file) {
             exec("ls -la {$file->getRealPath()}", $output);
             if ($file->isFile()) {
-                $this->checkGrpAndOwn($output[0], $io, "");
+                $this->checkGrpAndOwn($output[0], $io, '');
             } else {
                 foreach ($output as $item) {
-                    if ($item == '.' || $item == '..') continue;
+                    if ($item == '.' || $item == '..') {
+                        continue;
+                    }
                     $this->checkGrpAndOwn($item, $io, $file->getRealPath() . '/');
                 }
             }
         }
-        if($this->symbol) $io->success('权限正常');
+        if ($this->symbol) {
+            $io->success('权限正常');
+        }
     }
 
-    private function checkGrpAndOwn(string $info, SymfonyStyle $io, string $prefix = "")
+    private function checkGrpAndOwn(string $info, SymfonyStyle $io, string $prefix = '')
     {
-        $fileArr = explode(" ", $info);
+        $fileArr = explode(' ', $info);
         $fileArr = array_merge(array_filter($fileArr, function ($row) {
-            return !empty(trim($row));
+            return ! empty(trim($row));
         }), []);
 
         if (count($fileArr) == 9) {
@@ -143,16 +150,15 @@ DESC
     }
 
     /**
-     * 验证IP和域名
+     * 验证IP和域名.
      *
-     * @param string $domain
      * @return bool
      */
     private function domainCallback(string $domain)
     {
-        return preg_match("/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d{2,5})?/", $domain, $ipMatches) ||
-            (preg_match("/[^\s:\\\]+(:\d{2,5})?/", $domain, $urlMatches) &&
-                count($urlMatches) === 1);
+        return preg_match('/\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d{2,5})?/', $domain, $ipMatches)
+            || (preg_match('/[^\\s:\\\\]+(:\\d{2,5})?/', $domain, $urlMatches)
+                && count($urlMatches) === 1);
     }
 
     private function checkDisabledFunc(string $func)
