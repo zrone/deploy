@@ -101,8 +101,7 @@ DESC
 
     private function checkOption(array $args, SymfonyStyle $io): void
     {
-        // $path = Arr::get(Config::PROJECT, Arr::get($args, 1))['WEB_PATH'];
-        $path = '/Users/zrone/Developments/php/deploy';
+         $path = Arr::get(Config::PROJECT, Arr::get($args, 1))['WEB_PATH'];
 
         $finder = new Finder();
         $finder->in($path)
