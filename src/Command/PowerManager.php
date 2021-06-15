@@ -73,6 +73,7 @@ DESC
             case 'gitlab':
                 if(!Arr::exists($args, 2)) {
                     $io->error("请填写gitlab域名");
+                    exit();
                 } else {
                     $domain = Arr::get($args, 2);
                     !$this->domainCallback($domain) && $io->error("未验证的gitlab域名");
