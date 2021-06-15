@@ -71,9 +71,12 @@ DESC
 
         switch ($repository) {
             case 'gitlab':
-                !Arr::exists($args, 2) && $io->error("请填写gitlab域名");
-                $domain = Arr::get($args, 2);
-                !$this->domainCallback($domain) && $io->error("未验证的gitlab域名");
+                if(!Arr::exists($args, 2)) {
+                    $io->error("请填写gitlab域名");
+                } else {
+                    $domain = Arr::get($args, 2);
+                    !$this->domainCallback($domain) && $io->error("未验证的gitlab域名");
+                }
                 break;
 
             case 'gitee':
