@@ -57,8 +57,7 @@ DESC
                 $this->rsaOption($args, $io);
                 break;
             case 'check':
-                $project = Arr::get($args, 1);
-                $io->info($project);
+                $this->checkOption($args, $io);
                 break;
         }
 
@@ -98,13 +97,7 @@ DESC
     }
 
     private function checkOption(array $args, SymfonyStyle $io): void {
-        if(!Arr::exists($args, 2)) {
-            $io->error("请填写项目名称");
-            exit();
-        }
-
-        $project = Arr::exists($args, 2);
-        $path = Arr::get(Config::PROJECT, Arr::exists($args, 2))['WEB_PATH'];
+        $path = Arr::get(Config::PROJECT, Arr::exists($args, 1))['WEB_PATH'];
 
         $rootResponse = system("ls -la {$path} | awk '{printf \"%15s %6s %6s\n\", $9, $3, $4}'");
         $gitResponse = system("ls -la {$path}/.git | awk '{printf \"%15s %6s %6s\n\", $9, $3, $4}'");
