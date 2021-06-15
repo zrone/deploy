@@ -4,6 +4,7 @@
 namespace App\Command;
 
 
+use Config\Config;
 use ConstantUtil\Utils\Arr;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -49,6 +50,7 @@ DESC
     {
         $args = Arr::get($input->getArguments(), 'args');
         $io = new SymfonyStyle($input, $output);
+        $this->checkDisabledFunc('system') && $io->error("system方法被禁用，请打开后尝试");
 
         switch (Arr::get($args, 0)) {
             case 'id_rsa':
@@ -66,8 +68,6 @@ DESC
     private function rsaOption(array $args, SymfonyStyle $io): void
     {
         $repository = Arr::get($args, 1);
-
-        $this->checkDisabledFunc('system') && $io->error("system方法被禁用，请打开后尝试");
 
         switch ($repository) {
             case 'gitlab':
@@ -95,6 +95,21 @@ DESC
         } else {
             $io->warning("rsa授权失败，请检查rsa配置和权限配置是否正确");
         }
+    }
+
+    private function checkOption(array $args, SymfonyStyle $io): void {
+        if(!Arr::exists($args, 2)) {
+            $io->error("请填写项目名称");
+            exit();
+        }
+
+        $project = Arr::exists($args, 2);
+        $path = Arr::get(Config::PROJECT, Arr::exists($args, 2))['WEB_PATH'];
+
+        $rootResponse = system("ls -la {$path} | awk '{printf \"%15s %6s %6s\n\", $9, $3, $4}'");
+        $gitResponse = system("ls -la {$path}/.git | awk '{printf \"%15s %6s %6s\n\", $9, $3, $4}'");
+
+        $io->success($rootResponse);
     }
 
     /**
