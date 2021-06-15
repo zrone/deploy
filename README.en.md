@@ -33,6 +33,8 @@ Automated deployment using webhook to automate project deployment and release wi
     - `php bin/grace project create` Create Configuration
     - `php bin/grace project modify project_name` Modify Configuration
     - `php bin/grace project remove project_name` Remove Configuration
+    - `php bin/grace power id_rsa [repository [domain]]` Check whether the RSA is effective. Support gitee, GitHub and gitlab. Note that gitlab needs to fill in the detection domain
+    - `php bin/grace project check  [project]` Check directory permissions
 
 ![img_3.png](img_3.png)
 #### Instructions

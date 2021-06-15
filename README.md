@@ -33,6 +33,8 @@
     - `php bin/grace project create` 创建配置
     - `php bin/grace project modify project_name` 删除配置
     - `php bin/grace project remove project_name` 修改配置
+    - `php bin/grace power id_rsa [repository [domain]]` 检查rsa是否有效，支持gitee、github和gitlab, 注意gitlab需要填写检测domain
+    - `php bin/grace project check  [project]` 创建配置
     
 ![img_3.png](img_3.png)
 

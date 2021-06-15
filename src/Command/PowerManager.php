@@ -44,7 +44,7 @@ HELP
             InputArgument::IS_ARRAY | InputArgument::REQUIRED,
             <<<'DESC'
 id_rsa [repository [domain]] 检查rsa是否有效，支持gitee、github和gitlab, 注意gitlab需要填写检测domain
-check  [project]             创建配置
+check  [project]             检查目录权限
 DESC
         );
     }
